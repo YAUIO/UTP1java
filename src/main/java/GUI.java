@@ -101,6 +101,8 @@ public class GUI extends Thread {
                 cX = e.getX();
                 cY = e.getY();
 
+                guiBoard[ypk][xpk].eSelected();
+
                 synchronized (game) {
                     game.notify();
                 }

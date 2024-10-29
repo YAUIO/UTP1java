@@ -34,11 +34,16 @@ public class BoardElement extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (!isSelected) {
-            g.setColor(Color.BLACK);
-        } else {
+        if (isSelected) {
             g.setColor(Color.GREEN);
+
+            g.drawLine(10,10,x-10,10);
+            g.drawLine(x-10,10,x-10,y-10);
+            g.drawLine(x-10,y-10,10,y-10);
+            g.drawLine(10,y-10,10,10);
         }
+
+        g.setColor(Color.BLACK);
 
         g.drawLine(0,0,x,0);
         g.drawLine(x,0,x,y);
