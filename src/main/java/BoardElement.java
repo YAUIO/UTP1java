@@ -37,10 +37,12 @@ public class BoardElement extends JPanel {
         if (isSelected) {
             g.setColor(Color.GREEN);
 
-            g.drawLine(10,10,x-10,10);
-            g.drawLine(x-10,10,x-10,y-10);
-            g.drawLine(x-10,y-10,10,y-10);
-            g.drawLine(10,y-10,10,10);
+            int offset = 4;
+
+            g.drawLine(offset,offset,x-offset,offset);
+            g.drawLine(x-offset,offset,x-offset,y-offset);
+            g.drawLine(x-offset,y-offset,offset,y-offset);
+            g.drawLine(offset,y-offset,offset,offset);
         }
 
         g.setColor(Color.BLACK);

@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Arrays;
 
 public class Game extends Thread {
@@ -16,6 +17,13 @@ public class Game extends Thread {
 
     public static BoardMark toBoardMark(int val){
         return BoardMark.values()[val];
+    }
+
+    public Game(){
+        GUI.getPreGUI();
+        gui = null;
+        y = 0;
+        x = 0;
     }
 
     public Game(int x, int y, int size) {

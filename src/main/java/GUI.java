@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 public class GUI extends Thread {
     private final BoardElement[][] guiBoard;
@@ -23,6 +20,59 @@ public class GUI extends Thread {
 
     int xpk;
     int ypk;
+
+    public static void getPreGUI() {
+        JFrame window = new JFrame("HDPR");
+        window.setSize(400, 400);
+        window.setPreferredSize(new Dimension(400, 400));
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setLocationRelativeTo(null);
+
+        JPanel buttons = new JPanel(new GridLayout(3, 0, 100, 10));
+
+        Button f = new Button("8");
+        Button s = new Button("10");
+        Button t = new Button("12");
+
+        f.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand().equals("8")){
+                    window.dispose();
+                    Game game = new Game(1280,720, 8);
+                }
+            }
+        });
+
+        s.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand().equals("10")){
+                    window.dispose();
+                    Game game = new Game(1280,720, 10);
+                }
+            }
+        });
+
+        t.addActionListener((new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand().equals("12")){
+                    window.dispose();
+                    Game game = new Game(1280,720, 12);
+                }
+            }
+        }));
+
+        buttons.add(f);
+        buttons.add(s);
+        buttons.add(t);
+
+        window.add(buttons, BorderLayout.CENTER);
+
+        window.pack();
+        window.setVisible(true);
+    }
 
     GUI(int size, int x, int y, Game game) {
         cX = -1;
@@ -61,18 +111,22 @@ public class GUI extends Thread {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                switch(e.getKeyCode()) {
+                switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP -> {
-                        if (ypk>0) ypk--; guiBoard[ypk+1][xpk].eSelected();
+                        if (ypk > 0) ypk--;
+                        guiBoard[ypk + 1][xpk].eSelected();
                     }
                     case KeyEvent.VK_DOWN -> {
-                        if (ypk<boardSize-1) ypk++; guiBoard[ypk-1][xpk].eSelected();
+                        if (ypk < boardSize - 1) ypk++;
+                        guiBoard[ypk - 1][xpk].eSelected();
                     }
                     case KeyEvent.VK_RIGHT -> {
-                        if (xpk<boardSize-1) xpk++; guiBoard[ypk][xpk-1].eSelected();
+                        if (xpk < boardSize - 1) xpk++;
+                        guiBoard[ypk][xpk - 1].eSelected();
                     }
                     case KeyEvent.VK_LEFT -> {
-                        if (xpk>0) xpk--; guiBoard[ypk][xpk+1].eSelected();
+                        if (xpk > 0) xpk--;
+                        guiBoard[ypk][xpk + 1].eSelected();
                     }
                     case KeyEvent.VK_ENTER -> {
                         guiBoard[ypk][xpk].eSelected();
@@ -80,7 +134,9 @@ public class GUI extends Thread {
                             game.notify();
                         }
                     }
-                    default -> {return;}
+                    default -> {
+                        return;
+                    }
                 }
 
                 guiBoard[ypk][xpk].selected();
@@ -145,18 +201,18 @@ public class GUI extends Thread {
             c = 0;
             for (BoardElement panel : row) {
 
-                if(initPanel){
+                if (initPanel) {
                     panel = new BoardElement(x / boardSize, y / boardSize, false, false, false);
                 } else {
-                    if (game.lastStep[0]!=0 && game.lastStep[1]==r && game.lastStep[2]==c){
-                        switch (Game.toBoardMark(game.lastStep[0])){
+                    if (game.lastStep[0] != 0 && game.lastStep[1] == r && game.lastStep[2] == c) {
+                        switch (Game.toBoardMark(game.lastStep[0])) {
                             case Game.BoardMark.Cross:
                                 if (!panel.isCrossed) {
                                     frame.remove(panel);
                                     panel = new BoardElement(x / boardSize, y / boardSize, true, true, false);
                                 }
                                 break;
-                            case Game.BoardMark.Circle :
+                            case Game.BoardMark.Circle:
                                 if (!panel.isCrossed) {
                                     frame.remove(panel);
                                     panel = new BoardElement(x / boardSize, y / boardSize, true, false, false);
