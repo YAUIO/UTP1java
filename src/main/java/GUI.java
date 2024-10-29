@@ -146,19 +146,21 @@ public class GUI extends Thread {
                 if(initPanel){
                     panel = new BoardElement(x / boardSize, y / boardSize, false, false, false);
                 } else {
-                    switch (game.getBoard()[r][c]){
-                        case Game.BoardMark.Cross :
-                            if (!panel.isCrossed) {
-                                frame.remove(panel);
-                                panel = new BoardElement(x / boardSize, y / boardSize, true, true, false);
-                            }
-                            break;
-                        case Game.BoardMark.Circle :
-                            if (!panel.isCrossed) {
-                                frame.remove(panel);
-                                panel = new BoardElement(x / boardSize, y / boardSize, true, false, false);
-                            }
-                            break;
+                    if (game.lastStep[0]!=0 && game.lastStep[1]==r && game.lastStep[2]==c){
+                        switch (Game.toBoardMark(game.lastStep[0])){
+                            case Game.BoardMark.Cross:
+                                if (!panel.isCrossed) {
+                                    frame.remove(panel);
+                                    panel = new BoardElement(x / boardSize, y / boardSize, true, true, false);
+                                }
+                                break;
+                            case Game.BoardMark.Circle :
+                                if (!panel.isCrossed) {
+                                    frame.remove(panel);
+                                    panel = new BoardElement(x / boardSize, y / boardSize, true, false, false);
+                                }
+                                break;
+                        }
                     }
                 }
 

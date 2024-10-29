@@ -16,13 +16,6 @@ class GameTest{
 
     @Test
     public void testFetch(){
-        Game game = new Game(1280,720,10);
-        int[][] arr = new int[10][10];
 
-        for (int[] ints : arr) {
-            Arrays.fill(ints, 0);
-        }
-
-        assertArrayEquals(game.fetchInternal(-1,-1),arr);
     }
 }

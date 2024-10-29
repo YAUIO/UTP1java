@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class Game extends Thread {
-    private final BoardMark[][] boardMarks;
+    public int[] lastStep;
     private final int x;
     private final int y;
     private final GUI gui;
@@ -14,35 +14,26 @@ public class Game extends Thread {
         WonCircle
     }
 
+    public static BoardMark toBoardMark(int val){
+        return BoardMark.values()[val];
+    }
+
     public Game(int x, int y, int size) {
-        boardMarks = new BoardMark[size][size];
-        initialize(boardMarks.length);
-        gui = new GUI(boardMarks.length, x, y, this);
+        lastStep = null;
+        initialize(size);
+        gui = new GUI(size, x, y, this);
         this.x = x;
         this.y = y;
 
         this.start();
     }
 
-    protected native int[][] fetchInternal(int xp, int yp);
+    protected native int[] fetchInternal(int xp, int yp);
 
     private native void initialize(int size);
 
     private void updateBoardState(int xp, int yp) {
-        int[][] board = fetchInternal(xp, yp);
-
-        int row = 0;
-        int col = 0;
-
-        while (row < board.length) {
-            col = 0;
-            while (col < board[row].length) {
-                boardMarks[row][col] = BoardMark.values()[board[row][col]];
-                col++;
-            }
-            row++;
-        }
-
+        lastStep = fetchInternal(xp, yp);
     }
 
     private int[] getPlate() {
@@ -70,11 +61,11 @@ public class Game extends Thread {
             while (true) {
                 updateBoardState(field[0], field[1]);
                 gui.repaintJPanels();
-                if (boardMarks[0][0] == BoardMark.WonCross || boardMarks[0][0] == BoardMark.WonCircle){
+                if (toBoardMark(lastStep[0]) == BoardMark.WonCross || toBoardMark(lastStep[0]) == BoardMark.WonCircle){
                     synchronized (this) {
                         this.wait(400);
                     }
-                    System.out.println(boardMarks[0][0]);
+                    System.out.println(toBoardMark(lastStep[0]));
                     break;
                 }
                 synchronized (this) {
@@ -86,11 +77,5 @@ public class Game extends Thread {
         } catch (Exception e) {
             System.out.println("Exception in game thread: " + e.getMessage());
         }
-    }
-
-    ;
-
-    public BoardMark[][] getBoard() {
-        return boardMarks;
     }
 }
