@@ -34,33 +34,24 @@ public class GUI extends Thread {
         Button s = new Button("10");
         Button t = new Button("12");
 
-        f.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("8")){
-                    window.dispose();
-                    Game game = new Game(1280,720, 8);
-                }
+        f.addActionListener(e -> {
+            if (e.getActionCommand().equals("8")){
+                window.dispose();
+                new Game(1280,720, 8);
             }
         });
 
-        s.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("10")){
-                    window.dispose();
-                    Game game = new Game(1280,720, 10);
-                }
+        s.addActionListener(e -> {
+            if (e.getActionCommand().equals("10")){
+                window.dispose();
+                new Game(1280,720, 10);
             }
         });
 
-        t.addActionListener((new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("12")){
-                    window.dispose();
-                    Game game = new Game(1280,720, 12);
-                }
+        t.addActionListener((e -> {
+            if (e.getActionCommand().equals("12")){
+                window.dispose();
+                new Game(1280,720, 12);
             }
         }));
 
@@ -240,9 +231,7 @@ public class GUI extends Thread {
         init = false;
         repaintJPanels();
 
-        while (game.isAlive()) {
-
-        }
+        while (game.isAlive());
 
         frame.dispose();
     }
