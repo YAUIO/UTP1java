@@ -12,7 +12,8 @@ public class Game extends Thread {
         Cross,
         Circle,
         WonCross,
-        WonCircle
+        WonCircle,
+        Draw
     }
 
     public static BoardMark toBoardMark(int val){
@@ -69,7 +70,7 @@ public class Game extends Thread {
             while (true) {
                 updateBoardState(field[0], field[1]);
                 gui.repaintJPanels();
-                if (toBoardMark(lastStep[0]) == BoardMark.WonCross || toBoardMark(lastStep[0]) == BoardMark.WonCircle){
+                if (toBoardMark(lastStep[0]) == BoardMark.WonCross || toBoardMark(lastStep[0]) == BoardMark.WonCircle || toBoardMark(lastStep[0]) == BoardMark.Draw){
                     synchronized (this) {
                         this.wait(400);
                     }
