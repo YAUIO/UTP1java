@@ -189,6 +189,83 @@ class GameTest {
         }
     }
 
+    @Test
+    public void checkMouseInputDoubleClick() throws AWTException {
+        final int screenX = (1920 - 1280) / 2;
+        final int screenY = (1080 - 720) / 2;
+
+        Robot robot = new Robot();
+        int downMask = MouseEvent.BUTTON1_DOWN_MASK;
+        for (int size = 8; size <= 12; size += 2) {
+            int sqSizeX = 1280 / size;
+            int sqSizeY = 720 / size;
+
+            int oX = 0;
+            int oY = 0;
+
+            for (; oX < 20; oX++) {
+                if (robot.getPixelColor(oX + screenX, 10 + screenY) == Color.BLACK) {
+                    break;
+                }
+            }
+
+            for (; oY < 20; oY++) {
+                if (robot.getPixelColor(10 + screenX, oY + screenY) == Color.BLACK) {
+                    break;
+                }
+            }
+
+
+            int lastX = 0;
+            int lastY = 0;
+            for (int move = 0; move < size * size; move++) {
+                Game game = new Game(1280, 720, size);
+                try {
+                    synchronized (Thread.currentThread()) {
+                        Thread.currentThread().wait(100);
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                for (int y = lastY; y < size; y++) {
+                    if (game.lastStep[0] < 3) {
+                        for (int x = lastX; x < size; x++) {
+                            lastX = 0;
+                            if (game.lastStep[0] < 3) {
+                                robot.mouseMove(x * sqSizeX + screenX + oX, y * sqSizeY + screenY + oY);
+                                robot.mousePress(downMask);
+                                robot.mouseRelease(downMask);
+                                try {
+                                    synchronized (Thread.currentThread()) {
+                                        Thread.currentThread().wait(20);
+                                    }
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                robot.mousePress(downMask);
+                                robot.mouseRelease(downMask);
+                                try {
+                                    synchronized (Thread.currentThread()) {
+                                        Thread.currentThread().wait(20);
+                                    }
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                Assertions.assertEquals(Game.BoardMark.values()[move % 2 + 1].ordinal(), game.getValue(y, x));
+                                move++;
+                            } else {
+                                lastX = x;
+                                lastY = y;
+                                break;
+                            }
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     @Test
     public void checkKeyboardInput() throws AWTException {
@@ -240,6 +317,108 @@ class GameTest {
                         for (int x = lastX; x < size; x++) {
                             lastX = 0;
                             if (game.lastStep[0] < 3) {
+                                robot.keyPress(enter);
+                                robot.keyRelease(enter);
+                                try {
+                                    synchronized (Thread.currentThread()) {
+                                        Thread.currentThread().wait(20);
+                                    }
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                Assertions.assertEquals(Game.BoardMark.values()[move % 2 + 1].ordinal(), game.getValue(y, x));
+                                move++;
+                                robot.keyPress(right);
+                                robot.keyRelease(right);
+                            } else {
+                                lastX = x;
+                                lastY = y;
+                                break;
+                            }
+                        }
+                        if (lastX == 0){
+                            robot.keyPress(down);
+                            robot.keyRelease(down);
+
+                            for (int c = 0; c < size; c++) {
+                                robot.keyPress(left);
+                                robot.keyRelease(left);
+                                try {
+                                    synchronized (Thread.currentThread()) {
+                                        Thread.currentThread().wait(20);
+                                    }
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void checkKeyboardInputDoubleClick() throws AWTException {
+        Robot robot = new Robot();
+        int right = KeyEvent.VK_RIGHT;
+        int left = KeyEvent.VK_LEFT;
+        int down = KeyEvent.VK_DOWN;
+        int enter = KeyEvent.VK_ENTER;
+
+        for (int size = 8; size <= 12; size += 2) {
+            int lastX = 0;
+            int lastY = 0;
+            for (int move = 0; move < size * size; move++) {
+                Game game = new Game(1280, 720, size);
+                try {
+                    synchronized (Thread.currentThread()) {
+                        Thread.currentThread().wait(100);
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (lastX != 0 || lastY != 0){
+                    for (int c = 0; c < lastX; c++) {
+                        robot.keyPress(right);
+                        robot.keyRelease(right);
+                        try {
+                            synchronized (Thread.currentThread()) {
+                                Thread.currentThread().wait(20);
+                            }
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    for (int c = 0; c < lastY; c++) {
+                        robot.keyPress(down);
+                        robot.keyRelease(down);
+                        try {
+                            synchronized (Thread.currentThread()) {
+                                Thread.currentThread().wait(20);
+                            }
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+                for (int y = lastY; y < size; y++) {
+                    if (game.lastStep[0] < 3) {
+                        for (int x = lastX; x < size; x++) {
+                            lastX = 0;
+                            if (game.lastStep[0] < 3) {
+                                robot.keyPress(enter);
+                                robot.keyRelease(enter);
+                                try {
+                                    synchronized (Thread.currentThread()) {
+                                        Thread.currentThread().wait(20);
+                                    }
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 robot.keyPress(enter);
                                 robot.keyRelease(enter);
                                 try {
