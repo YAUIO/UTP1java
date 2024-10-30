@@ -28,7 +28,7 @@ public class Game extends Thread {
     }
 
     public Game(int x, int y, int size) {
-        lastStep = null;
+        lastStep = new int[]{0, 0, 0};
         initialize(size);
         gui = new GUI(size, x, y, this);
         this.x = x;
@@ -37,9 +37,15 @@ public class Game extends Thread {
         this.start();
     }
 
-    protected native int[] fetchInternal(int xp, int yp);
+    protected native int getValue(int y, int x); //only for testing purposes
 
-    private native void initialize(int size);
+    protected native int getSize(); //only for testing purposes
+
+    protected native void setValue(int y, int x, int value); //only for testing purposes
+
+    protected native void initialize(int size);
+
+    protected native int[] fetchInternal(int xp, int yp);
 
     private void updateBoardState(int xp, int yp) {
         lastStep = fetchInternal(xp, yp);
