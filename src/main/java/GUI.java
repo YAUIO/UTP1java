@@ -35,23 +35,23 @@ public class GUI extends Thread {
         Button t = new Button("12");
 
         f.addActionListener(e -> {
-            if (e.getActionCommand().equals("8")){
+            if (e.getActionCommand().equals("8")) {
                 window.dispose();
-                new Game(1280,720, 8);
+                new Game(1280, 720, 8);
             }
         });
 
         s.addActionListener(e -> {
-            if (e.getActionCommand().equals("10")){
+            if (e.getActionCommand().equals("10")) {
                 window.dispose();
-                new Game(1280,720, 10);
+                new Game(1280, 720, 10);
             }
         });
 
         t.addActionListener((e -> {
-            if (e.getActionCommand().equals("12")){
+            if (e.getActionCommand().equals("12")) {
                 window.dispose();
-                new Game(1280,720, 12);
+                new Game(1280, 720, 12);
             }
         }));
 
@@ -191,25 +191,13 @@ public class GUI extends Thread {
         for (BoardElement[] row : guiBoard) {
             c = 0;
             for (BoardElement panel : row) {
-
                 if (initPanel) {
-                    panel = new BoardElement(x / boardSize, y / boardSize, false, false, false);
+                    panel = new BoardElement(x / boardSize, y / boardSize, r, c, false, game);
                 } else {
                     if (game.lastStep[0] != 0 && game.lastStep[1] == r && game.lastStep[2] == c) {
-                        switch (Game.toBoardMark(game.lastStep[0])) {
-                            case Game.BoardMark.Cross:
-                                if (!panel.isCrossed) {
-                                    frame.remove(panel);
-                                    panel = new BoardElement(x / boardSize, y / boardSize, true, true, false);
-                                }
-                                break;
-                            case Game.BoardMark.Circle:
-                                if (!panel.isCrossed) {
-                                    frame.remove(panel);
-                                    panel = new BoardElement(x / boardSize, y / boardSize, true, false, false);
-                                }
-                                break;
-                        }
+                            frame.remove(panel);
+                            panel = new BoardElement(x / boardSize, y / boardSize, r, c, false, game);
+                        break;
                     }
                 }
 
@@ -231,7 +219,7 @@ public class GUI extends Thread {
         init = false;
         repaintJPanels();
 
-        while (game.isAlive());
+        while (game.isAlive()) ;
 
         frame.dispose();
     }

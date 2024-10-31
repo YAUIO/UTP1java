@@ -2,18 +2,20 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BoardElement extends JPanel {
-    private final int x;
-    private final int y;
-    public final boolean isCrossed;
-    private final boolean isCross;
+    private final int xSize;
+    private final int ySize;
+    private final int xTile;
+    private final int yTile;
     private boolean isSelected;
+    private final Game game;
 
-    BoardElement(int x, int y, boolean isCrossed, boolean isCross, boolean isSelected) {
-        this.x = x;
-        this.y = y;
-        this.isCrossed = isCrossed;
-        this.isCross = isCross;
+    BoardElement(int xSize, int ySize, int xTile, int yTile, boolean isSelected, Game game) {
+        this.xSize = xSize;
+        this.ySize = ySize;
+        this.xTile = xTile;
+        this.yTile = yTile;
         this.isSelected = isSelected;
+        this.game = game;
     }
 
     public void selected(){
@@ -39,27 +41,29 @@ public class BoardElement extends JPanel {
 
             int offset = 4;
 
-            g.drawLine(offset,offset,x-offset,offset);
-            g.drawLine(x-offset,offset,x-offset,y-offset);
-            g.drawLine(x-offset,y-offset,offset,y-offset);
-            g.drawLine(offset,y-offset,offset,offset);
+            g.drawLine(offset,offset,xSize-offset,offset);
+            g.drawLine(xSize-offset,offset,xSize-offset,ySize-offset);
+            g.drawLine(xSize-offset,ySize-offset,offset,ySize-offset);
+            g.drawLine(offset,ySize-offset,offset,offset);
         }
 
         g.setColor(Color.BLACK);
 
-        g.drawLine(0,0,x,0);
-        g.drawLine(x,0,x,y);
-        g.drawLine(x,y,0,y);
-        g.drawLine(0,y,0,0);
+        g.drawLine(0,0,xSize,0);
+        g.drawLine(xSize,0,xSize,ySize);
+        g.drawLine(xSize,ySize,0,ySize);
+        g.drawLine(0,ySize,0,0);
 
-        if(isCrossed){
-            if (isCross){
+        int tileValue = game.getValue(yTile,xTile);
+
+        if(tileValue>0 && tileValue<3){
+            if (tileValue==1){
                 g.setColor(Color.RED);
-                g.drawLine(0,0,x,y);
-                g.drawLine(x,0,0,y);
+                g.drawLine(0,0,xSize,ySize);
+                g.drawLine(xSize,0,0,ySize);
             } else {
                 g.setColor(Color.BLUE);
-                g.drawOval(x/4,y/4,(int)(0.5*(double)x),(int)(0.5*(double)y));
+                g.drawOval(xSize/4,ySize/4,(int)(0.5*(double)xSize),(int)(0.5*(double)ySize));
             }
         }
     }
