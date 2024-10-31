@@ -185,29 +185,34 @@ public class GUI extends Thread {
             return;
         }
 
-        int r = 0;
-        int c;
-
-        for (BoardElement[] row : guiBoard) {
-            c = 0;
-            for (BoardElement panel : row) {
-                if (initPanel) {
-                    panel = new BoardElement(x / boardSize, y / boardSize, r, c, false, game);
-                } else {
-                    if (game.lastStep[0] != 0 && game.lastStep[1] == r && game.lastStep[2] == c) {
-                            frame.remove(panel);
-                            panel = new BoardElement(x / boardSize, y / boardSize, r, c, false, game);
-                        break;
-                    }
+        if (initPanel) {
+            int r = 0;
+            int c;
+            for (BoardElement[] row : guiBoard) {
+                c = 0;
+                for (BoardElement panel : row) {
+                    panel = new BoardElement(x / boardSize, y / boardSize, c, r, false, game);
+                    panel.setVisible(true);
+                    frame.add(panel);
+                    guiBoard[r][c] = panel;
+                    c++;
                 }
-
-                panel.setVisible(true);
-                guiBoard[r][c] = panel;
-                frame.add(panel);
-                c++;
+                r++;
             }
-            r++;
+        } else {
+            BoardElement panel = guiBoard[game.lastStep[1]][game.lastStep[2]];
+            frame.remove(panel);
+            panel = new BoardElement(x / boardSize, y / boardSize, game.lastStep[2], game.lastStep[1], false, game);
+            guiBoard[game.lastStep[1]][game.lastStep[2]] = panel;
+            for (BoardElement[] row : guiBoard) {
+                for (BoardElement panelIter : row) {
+                    frame.remove(panelIter);
+                    frame.add(panelIter);
+                }
+            }
         }
+
+
         frame.pack();
         frame.setVisible(true);
         initPanel = false;
@@ -219,7 +224,7 @@ public class GUI extends Thread {
         init = false;
         repaintJPanels();
 
-        while (game.isAlive()) ;
+        while (game.isAlive());
 
         frame.dispose();
     }
