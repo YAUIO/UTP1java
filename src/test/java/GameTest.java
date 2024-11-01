@@ -19,6 +19,13 @@ class GameTest {
         System.load("/home/yudek/Documents/CLionProjects/UTP1/cmake-build-debug/libUTP1.so");
     }
 
+    @BeforeEach
+    public void waitE() throws InterruptedException {
+        synchronized (Thread.currentThread()){
+            Thread.currentThread().wait(1000);
+        }
+    }
+
     public static void printBoard(int size, Game game) {
         for (int a = 0; a < size; a++) {
             for (int b = 0; b < size; b++) {
@@ -31,9 +38,11 @@ class GameTest {
 
     @Test
     public void testInitialize() {
+
+
         for (int size = 8; size <= 12; size += 2) {
 
-            Game game = new Game();
+            Game game = new Game(false);
 
             game.initialize(size);
 
@@ -44,6 +53,13 @@ class GameTest {
             }
 
             assertEquals(size, game.getSize());
+
+            try {
+                game.interrupt();
+                game.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -53,17 +69,26 @@ class GameTest {
             for (int size = 8; size <= 12; size += 2) {
                 for (int x = 0; x < size - 4; x++) {
                     for (int y = 0; y < size; y++) {
-                        Game game = new Game();
+                        Game game = new Game(false);
                         game.initialize(size);
+
                         for (int c = 0; c < 4; c++) {
                             game.setValue(y, x + c, element.ordinal());
                         }
+
 
                         if (element == Game.BoardMark.Circle) {
                             game.fetchInternal(size - x - 1, size - y - 1);
                         }
 
                         Assertions.assertEquals(win.ordinal(), game.fetchInternal(x + 4, y)[0]);
+
+                        try {
+                            game.interrupt();
+                            game.join();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
@@ -76,8 +101,9 @@ class GameTest {
             for (int size = 8; size <= 12; size += 2) {
                 for (int x = 0; x < size; x++) {
                     for (int y = 0; y < size - 4; y++) {
-                        Game game = new Game();
+                        Game game = new Game(false);
                         game.initialize(size);
+
                         for (int c = 0; c < 4; c++) {
                             game.setValue(y + c, x, element.ordinal());
                         }
@@ -87,6 +113,13 @@ class GameTest {
                         }
 
                         Assertions.assertEquals(win.ordinal(), game.fetchInternal(x, y + 4)[0]);
+
+                        try {
+                            game.interrupt();
+                            game.join();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
@@ -99,8 +132,9 @@ class GameTest {
             for (int size = 8; size <= 12; size += 2) {
                 for (int x = 0; x < size - 4; x++) {
                     for (int y = 0; y < size - 4; y++) {
-                        Game game = new Game();
+                        Game game = new Game(false);
                         game.initialize(size);
+
                         for (int c = 0; c < 4; c++) {
                             game.setValue(y + c, x + c, element.ordinal());
                         }
@@ -114,6 +148,13 @@ class GameTest {
                         }
 
                         Assertions.assertEquals(win.ordinal(), game.fetchInternal(x + 4, y + 4)[0]);
+
+                        try {
+                            game.interrupt();
+                            game.join();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
@@ -184,6 +225,13 @@ class GameTest {
                     } else {
                         break;
                     }
+                }
+
+                try {
+                    game.interrupt();
+                    game.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -263,6 +311,13 @@ class GameTest {
                         break;
                     }
                 }
+
+                try {
+                    game.interrupt();
+                    game.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -282,7 +337,7 @@ class GameTest {
                 Game game = new Game(1280, 720, size);
                 try {
                     synchronized (Thread.currentThread()) {
-                        Thread.currentThread().wait(100);
+                        Thread.currentThread().wait(200);
                     }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -355,6 +410,13 @@ class GameTest {
                     } else {
                         break;
                     }
+                }
+
+                try {
+                    game.interrupt();
+                    game.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -457,6 +519,13 @@ class GameTest {
                     } else {
                         break;
                     }
+                }
+
+                try {
+                    game.interrupt();
+                    game.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

@@ -27,6 +27,16 @@ public class Game extends Thread {
         x = 0;
     }
 
+    public Game(boolean gui){ //only for testing
+        if (gui){
+            GUI.getPreGUI();
+        }
+
+        this.gui = null;
+        y = 0;
+        x = 0;
+    }
+
     public Game(int x, int y, int size) {
         lastStep = new int[]{0, 0, 0};
         initialize(size);
@@ -37,7 +47,7 @@ public class Game extends Thread {
         this.start();
     }
 
-    protected native int getValue(int y, int x); //only for testing purposes
+    protected native int getValue(int y, int x);
 
     protected native int getSize(); //only for testing purposes
 
@@ -89,8 +99,14 @@ public class Game extends Thread {
                 field = getPlate();
             }
             
+        } catch (InterruptedException e) {
+            gui.interrupt();
+            System.out.println("Thread interrupted");
         } catch (Exception e) {
             System.out.println("Exception in game thread: " + e.getMessage());
         }
+
+        gui.interrupt();
     }
+
 }

@@ -201,12 +201,11 @@ public class GUI extends Thread {
             }
         } else {
             BoardElement panel = guiBoard[game.lastStep[1]][game.lastStep[2]];
-            frame.remove(panel);
+            frame.getContentPane().removeAll();
             panel = new BoardElement(x / boardSize, y / boardSize, game.lastStep[2], game.lastStep[1], false, game);
             guiBoard[game.lastStep[1]][game.lastStep[2]] = panel;
             for (BoardElement[] row : guiBoard) {
                 for (BoardElement panelIter : row) {
-                    frame.remove(panelIter);
                     frame.add(panelIter);
                 }
             }
@@ -224,7 +223,16 @@ public class GUI extends Thread {
         init = false;
         repaintJPanels();
 
-        while (game.isAlive());
+        try {
+            while (game.isAlive()) {
+                synchronized (this){
+                    this.wait(10);
+                }
+            }
+        } catch (InterruptedException e){
+            frame.dispose();
+        }
+
 
         frame.dispose();
     }
